@@ -86,7 +86,7 @@ public class Player {
 							// Find the square containing the opponent
 							int captureY = (lastMove.getFrom().getY() + lastMove.getTo().getY()) / 2;
 							Square enPassant = board.getSquare(lastMove.getTo().getX(), captureY);
-							if (enPassant.occupiedBy() == Colour.NONE) {
+							if (enPassant != null && enPassant.occupiedBy() == Colour.NONE) {
 								Move mEPass = new Move(sq, enPassant, true, true);
 								validMoves.add(mEPass);
 							}
@@ -98,16 +98,16 @@ public class Player {
             // Look for capture moves
             if (sq.getX() > 0) {
                 Square capt = board.getSquare(sq.getX() - 1, sq.getY() + (1 * dir));
-                // Only valid if square is occupied by the opponent
-                if (capt.occupiedBy() == opponent) {
+                // Only valid if square exists and is occupied by the opponent
+                if (capt != null && capt.occupiedBy() == opponent) {
                     Move mCapt = new Move(sq, capt, true, false);
                     validMoves.add(mCapt);
                 }
             }
             if (sq.getX() < Utils.dim - 1) {
                 Square captAlt = board.getSquare(sq.getX() + 1, sq.getY() + (1 * dir));
-                // Only valid if square is occupied by the opponent
-                if (captAlt.occupiedBy() == opponent) {
+                // Only valid if square exists and is occupied by the opponent
+                if (captAlt != null && captAlt.occupiedBy() == opponent) {
                     Move mCaptAlt = new Move(sq, captAlt, true, false);
                     validMoves.add(mCaptAlt);
                 }
@@ -115,8 +115,8 @@ public class Player {
 
             // Look for standard 1 square moves
             Square sOne = board.getSquare(sq.getX(), sq.getY() + (1 * dir));
-            // Only valid if square is empty
-            if (sOne.occupiedBy() == Colour.NONE) {
+            // Only valid if square exists and is empty
+            if (sOne != null && sOne.occupiedBy() == Colour.NONE) {
                 Move mOne = new Move(sq, sOne, false, false);
                 validMoves.add(mOne);
             }
@@ -127,8 +127,8 @@ public class Player {
             // If this is the starting square, can move forward 2 squares
             if (sq.getY() == startRow) {
                 Square sTwo = board.getSquare(sq.getX(), sq.getY() + (2 * dir));
-                // Only valid if square is empty
-                if (sTwo.occupiedBy() == Colour.NONE) {
+                // Only valid if square exists and is empty
+                if (sTwo != null && sTwo.occupiedBy() == Colour.NONE) {
                     Move mTwo = new Move(sq, sTwo, false, false);
                     validMoves.add(mTwo);
                 }
@@ -156,7 +156,7 @@ public class Player {
             // Check the square directly in front
             if (row >= 0 && row < Utils.dim) {
                 Square frontSq = board.getSquare(x, row);
-                if (frontSq.occupiedBy() == opponentCol) {
+                if (frontSq != null && frontSq.occupiedBy() == opponentCol) {
                     return false;
                 }
             }
@@ -164,7 +164,7 @@ public class Player {
             // Check diagonally left
             if (x > 0 && row >= 0 && row < Utils.dim) {
                 Square leftSq = board.getSquare(x - 1, row);
-                if (leftSq.occupiedBy() == opponentCol) {
+                if (leftSq != null && leftSq.occupiedBy() == opponentCol) {
                     return false;
                 }
             }
@@ -172,7 +172,7 @@ public class Player {
             // Check diagonally right
             if (x < Utils.dim - 1 && row >= 0 && row < Utils.dim) {
                 Square rightSq = board.getSquare(x + 1, row);
-                if (rightSq.occupiedBy() == opponentCol) {
+                if (rightSq != null && rightSq.occupiedBy() == opponentCol) {
                     return false;
                 }
             }
@@ -230,8 +230,8 @@ public class Player {
      * Minimax algorithm with alpha-beta pruning
      */
     private int minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
-        // Check for terminal states
-        if (game.isFinished()) {
+        // Check for terminal states (silent mode during search)
+        if (game.isFinished(false)) {
             Colour winner = game.getGameResult();
             if (winner == col) {
                 return Integer.MAX_VALUE - (MAX_DEPTH - depth); // Prefer faster wins
@@ -375,8 +375,8 @@ public class Player {
      * Evaluate the current position from this player's perspective
      */
     private int evaluatePosition() {
-        // Check for terminal states first
-        if (game.isFinished()) {
+        // Check for terminal states first (silent mode during search)
+        if (game.isFinished(false)) {
             Colour winner = game.getGameResult();
             if (winner == col) {
                 return Integer.MAX_VALUE / 2;

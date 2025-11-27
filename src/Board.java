@@ -30,6 +30,10 @@ public class Board {
     }
 
     public Square getSquare(int x, int y) {
+        // Bounds checking to prevent ArrayIndexOutOfBoundsException
+        if (x < 0 || x >= Utils.dim || y < 0 || y >= Utils.dim) {
+            return null;
+        }
         return setup[x][y];
     }
 

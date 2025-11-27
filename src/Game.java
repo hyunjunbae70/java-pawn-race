@@ -48,20 +48,33 @@ public class Game {
     }
 
     public boolean isFinished() {
+        return isFinished(true);
+    }
+    
+    public boolean isFinished(boolean log) {
 
-        if (currentMove == 0) return false;
+        if (currentMove == 0 || moves.isEmpty()) return false;
+        
+        // Safety check: ensure we have a valid move to check
+        if (currentMove - 1 >= moves.size() || currentMove - 1 < 0) {
+            return false;
+        }
 
         Square lastReached = moves.get(currentMove - 1).getTo();
         if (lastReached.getY() == (Utils.dim - 1)) {
             if (lastReached.occupiedBy() == Colour.WHITE) {
-                System.out.println("White has reached the final rank!");
+                if (log) {
+                    System.out.println("White has reached the final rank!");
+                }
                 winner = Colour.WHITE;
                 return true;
             }
         }
         else if (lastReached.getY() == 0) {
             if (lastReached.occupiedBy() == Colour.BLACK) {
-                System.out.println("Black has reached the final rank!");
+                if (log) {
+                    System.out.println("Black has reached the final rank!");
+                }
                 winner = Colour.BLACK;
                 return true;
             }
@@ -69,12 +82,16 @@ public class Game {
 
         // See if player has no pawns left or is stuck
         if (players[0].getAllPawns().length == 0 || players[0].getAllValidMoves().length == 0) {
-            System.out.println("White is unable to move!");
+            if (log) {
+                System.out.println("White is unable to move!");
+            }
             winner = Colour.BLACK;
             return true;
         }
         else if (players[1].getAllPawns().length == 0 || players[1].getAllValidMoves().length == 0) {
-            System.out.println("Black is unable to move!");
+            if (log) {
+                System.out.println("Black is unable to move!");
+            }
             winner = Colour.WHITE;
             return true;
         }
@@ -104,7 +121,13 @@ public class Game {
                 String moveData = sanParts[0];
                 String captureData = sanParts[1];
                 int[] capture = translateSAN(captureData);
+                if (capture == null) {
+                    return null;
+                }
                 Square captureSq = board.getSquare(capture[0], capture[1]);
+                if (captureSq == null) {
+                    return null;
+                }
 
                 // Find the starting square
                 int[] start = translateSAN(moveData + (capture[1] - (1*dir) + 1));
@@ -112,6 +135,9 @@ public class Game {
                     return null;
                 }
                 Square startSq = board.getSquare(start[0], start[1]);
+                if (startSq == null) {
+                    return null;
+                }
 
                 if (startSq.occupiedBy() == currentPlayer) {
                     if (captureSq.occupiedBy() == opponent) {
@@ -121,11 +147,11 @@ public class Game {
 
                         // Look if the previous move was a 2 square move
                         Move lastMove = moves.get(currentMove - 1);
-                        if (Math.abs(lastMove.getFrom().getY() - lastMove.getTo().getY()) == 2) {
+                        if (lastMove != null && Math.abs(lastMove.getFrom().getY() - lastMove.getTo().getY()) == 2) {
                             // This could be an "en-passant" capture
                             // Find the square containing the opponent
                             Square enPassant = board.getSquare(captureSq.getX(), startSq.getY());
-                            if (enPassant.occupiedBy() == opponent) {
+                            if (enPassant != null && enPassant.occupiedBy() == opponent) {
                                 return new Move(startSq, captureSq, true, true);
                             }
                         }
@@ -142,6 +168,9 @@ public class Game {
                 }
 
                 Square endSq = board.getSquare(endCoords[0], endCoords[1]);
+                if (endSq == null) {
+                    return null;
+                }
                 // Only continue if this square is unoccupied
                 if (endSq.occupiedBy() != Colour.NONE) {
                     return null;
@@ -149,6 +178,9 @@ public class Game {
 
                 // Find starting square
                 Square startSq = board.getSquare(endCoords[0], endCoords[1]-(1*dir));
+                if (startSq == null) {
+                    return null;
+                }
 
                 // If same colour, this is the move we want
                 if (startSq.occupiedBy() == currentPlayer) {
@@ -158,7 +190,7 @@ public class Game {
                     // Look at 2 squares back
                     // Must be starting square
                     startSq = board.getSquare(endCoords[0], endCoords[1]-(2*dir));
-                    if (startSq.occupiedBy() == currentPlayer && endCoords[1]-(2*dir) == startRow) {
+                    if (startSq != null && startSq.occupiedBy() == currentPlayer && endCoords[1]-(2*dir) == startRow) {
                         return new Move(startSq, endSq, false, false);
                     }
                 }
