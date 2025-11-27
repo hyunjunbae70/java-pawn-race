@@ -1,2 +1,7 @@
 # java-pawn-race
-Imperial College London 1st Year project
+
+This project is an implementation of Pawn Race, a simplified chess variant developed as part of the Imperial College London 1st Year curriculum. Pawn Race is a strategic two-player game where each player controls a set of pawns and competes to be the first to advance one of their pawns to the opposite end of the board. The game features a standard chess board setup with white pawns starting on the second rank and black pawns starting on the seventh rank, with customizable gaps in each player's pawn formation to add strategic depth and variety to each game session.
+
+The implementation supports both human and computer players, allowing for flexible gameplay configurations including human versus human, human versus computer, and computer versus computer matches. Players can input moves using standard algebraic notation (SAN), and the game includes full support for pawn movement rules including forward moves, diagonal captures, and en passant captures. The computer player utilizes intelligent move selection algorithms to provide a challenging opponent experience.
+
+The game is implemented in Java with a modular architecture that separates concerns between board representation, game logic, player management, and move parsing. The codebase includes classes for managing the game board state, validating and applying moves, parsing user input, and handling both human and computer player interactions. The project can be compiled and executed from the command line, with the game state displayed in a text-based format that shows the current board position after each move.
