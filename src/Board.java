@@ -79,7 +79,12 @@ public class Board {
 
         if (move.isCapture()) {
             if (move.isEnPassantCapture()) {
-                // TODO: implement
+                // For en-passant, the captured pawn was on the same rank as the starting square
+                // but on the file of the destination square
+                // Restore the captured pawn to its original position
+                Square enPassantSq = setup[moveTo.getX()][moveFrom.getY()];
+                Colour capturedPawnColour = (endOcc == Colour.BLACK) ? Colour.WHITE : Colour.BLACK;
+                enPassantSq.setOccupier(capturedPawnColour);
             }
             else {
                 // This type of move was a capture move

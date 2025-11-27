@@ -42,6 +42,7 @@ public class Game {
         if (currentMove > 0) {
             Move lastMove = moves.get(currentMove - 1);
             board.unapplyMove(lastMove);
+            moves.remove(currentMove - 1);
             updateGame(-1);
         }
     }
