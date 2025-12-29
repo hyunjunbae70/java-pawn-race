@@ -1,29 +1,55 @@
-# java-pawn-race
+# Java Pawn Race
 
-This project is an implementation of Pawn Race, a simplified chess variant developed as part of the Imperial College London 1st Year curriculum. Pawn Race is a strategic two-player game where each player controls a set of pawns and competes to be the first to advance one of their pawns to the opposite end of the board. The game features a standard chess board setup with white pawns starting on the second rank and black pawns starting on the seventh rank, with customizable gaps in each player's pawn formation to add strategic depth and variety to each game session.
+Imperial 1st year project implementing Pawn Race - a simplified chess variant where you only control pawns.
 
-The implementation supports both human and computer players, allowing for flexible gameplay configurations including human versus human, human versus computer, and computer versus computer matches. Players can input moves using standard algebraic notation (SAN), and the game includes full support for pawn movement rules including forward moves, diagonal captures, and en passant captures. The computer player utilizes intelligent move selection algorithms to provide a challenging opponent experience.
+## What is Pawn Race?
 
-The game is implemented in Java with a modular architecture that separates concerns between board representation, game logic, player management, and move parsing. The codebase includes classes for managing the game board state, validating and applying moves, parsing user input, and handling both human and computer player interactions. The project can be compiled and executed from the command line, with the game state displayed in a text-based format that shows the current board position after each move.
+- Two-player game using only pawns on a standard chess board
+- Win by advancing one of your pawns to the opposite end
+- White pawns start on rank 2, black pawns on rank 7
+- Each side has one customizable gap in their pawn formation for added strategy
 
-## How to Run
+## Features
 
-To compile the project, navigate to the project directory and run the following command to compile all Java source files into the `build` directory:
+- **Player modes**: Human vs human, human vs computer, or computer vs computer
+- **Move notation**: Standard Algebraic Notation (SAN) - e.g., `e4` or `exd5`
+- **Pawn rules**: Forward moves, diagonal captures, and en passant
+- **Computer opponent**: Uses minimax algorithm for move selection
+- **Text-based UI**: Clean board display updated after each move
 
+## Quick Start
+
+Compile:
 ```bash
 javac -d build/ -sourcepath src/ src/*.java
 ```
 
-Once compiled, the game can be executed using the following command:
-
+Run:
 ```bash
 java -cp build PawnRace <player1> <player2> <whiteGap> <blackGap>
 ```
 
-The command requires four arguments: `player1` specifies whether the white player is a human (`p`) or computer (`c`), `player2` specifies whether the black player is a human (`p`) or computer (`c`), `whiteGap` is a letter from a-h indicating which column should have no white pawn in the initial setup, and `blackGap` is a letter from a-h indicating which column should have no black pawn in the initial setup. For example, to run a game with a human white player against a computer black player, with white missing a pawn in column 'a' and black missing a pawn in column 'h', you would execute:
+**Arguments:**
+- `player1`, `player2`: `p` for human, `c` for computer
+- `whiteGap`, `blackGap`: Column (a-h) with no pawn at start
 
+**Example:**
 ```bash
 java -cp build PawnRace p c a h
 ```
+This starts a game with a human white player vs computer black player, with white missing a pawn in column 'a' and black missing one in column 'h'.
 
-During gameplay, human players enter moves using standard algebraic notation (e.g., `e4` for a pawn move to e4, or `exd5` for a capture). Players can type `:q` at any time to quit the game.
+## Gameplay
+
+- Enter moves using SAN notation: `e4`, `exd5`, etc.
+- Type `:q` to quit at any time
+- Board displays after each move
+
+## Project Structure
+
+The implementation includes:
+- Board state management
+- Move validation and execution
+- SAN parser
+- Computer player with minimax search
+- Game loop and I/O handling
